@@ -573,7 +573,13 @@ function generateBombs() {
 
 function generatePlayer() {
     var playerImg = new Image();
-    playerImg.src = 'car.png';
+    if (moveLeft) {
+        playerImg.src = 'carL.png';
+    } else if (moveRight) {
+        playerImg.src = 'carR.png';
+    } else {
+        playerImg.src = 'car.png';
+    }
 
     ctx.drawImage(playerImg, player.xPos, player.yPos);
 }

@@ -551,7 +551,7 @@ let player = {
 document.onkeydown = (event) => { setDirection(event, true) };
 document.onkeyup = (event) => { setDirection(event, false) };
 
-setInterval(generateInitialScreen, 1000 / (60 * 2.5));
+window.requestAnimationFrame(generateInitialScreen);
 
 function generateInitialScreen() {
     generateBackground();
@@ -562,6 +562,7 @@ function generateInitialScreen() {
     drawScore();
     handlePlayer();
     handleStep();
+    window.requestAnimationFrame(generateInitialScreen);
 }
 
 function generateBombs() {

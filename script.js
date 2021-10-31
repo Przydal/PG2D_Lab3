@@ -2,10 +2,9 @@ const canvas = document.getElementById("myCanvas"),
     ctx = canvas.getContext("2d");
 
 const leftKey = 'ArrowLeft',
-    rightKey = 'ArrowRight',
-    playerShift = 5;
+    rightKey = 'ArrowRight';
 
-let shift = 0,
+let shift = -300,
     score = 0,
     moveLeft = false,
     moveRight = false;
@@ -544,16 +543,14 @@ let player = {
     xPos: canvas.clientWidth / 2 - 22,
     yPos: 400,
     width: 45,
-    length: 94
+    length: 94,
+    shift: 5
 }
 
 document.onkeydown = (event) => { setDirection(event, true) };
 document.onkeyup = (event) => { setDirection(event, false) };
 
 setInterval(generateInitialScreen, 1000 / (60 * 2.5));
-
-//generateInitialScreen();
-
 
 function generateInitialScreen() {
     generateBackground();
@@ -562,7 +559,7 @@ function generateInitialScreen() {
     drawCoins();
     generateBombs();
     drawScore();
-    move();
+    handlePlayer();
     handleStep();
 }
 
@@ -577,15 +574,17 @@ function generateBombs() {
 function generatePlayer() {
     var playerImg = new Image();
     playerImg.src = 'car.png';
+
     ctx.drawImage(playerImg, player.xPos, player.yPos);
 }
 
-function move() {
+function handlePlayer() {
     checkCollection();
+    checkCollision();
     if (moveRight && player.xPos < canvas.width) {
-        player.xPos += playerShift;
+        player.xPos += player.shift;
     } else if (moveLeft && player.xPos > 0) {
-        player.xPos -= playerShift;
+        player.xPos -= player.shift;
     }
     generatePlayer();
 }
@@ -688,4 +687,24 @@ function checkCollection() {
             };
         }
     });
+}
+
+function checkCollision() {
+    bombPositions.forEach((bomb) => {
+        if (Math.abs(player.xPos - bomb.xPos) < player.width - 8 &&
+            player.yPos - bomb.yPos + shift <= 0 &&
+            player.yPos - bomb.yPos + shift > -(player.length / 2)
+        ) {
+            resetGame();
+        };
+    });
+}
+
+function resetGame() {
+    score = 0;
+    shift = 0;
+    player.xPos = canvas.clientWidth / 2 - 22;
+    coinsPositions.forEach((coin) => {
+        coin.collected = false;
+    })
 }

@@ -6,6 +6,7 @@ const leftKey = 'ArrowLeft',
 
 let shift = -300,
     score = 0,
+    bestScore = 0,
     moveLeft = false,
     moveRight = false;
 
@@ -567,7 +568,9 @@ function generateBombs() {
     var img = new Image();
     img.src = 'bomb.png';
     bombPositions.forEach((bombPosition) => {
-        ctx.drawImage(img, bombPosition.xPos, bombPosition.yPos - shift);
+        if (shouldDraw(bombPosition.yPos - shift)) {
+            ctx.drawImage(img, bombPosition.xPos, bombPosition.yPos - shift);
+        }
     })
 }
 
@@ -587,7 +590,7 @@ function generatePlayer() {
 function handlePlayer() {
     checkCollection();
     checkCollision();
-    if (moveRight && player.xPos < canvas.width) {
+    if (moveRight && player.xPos < canvas.width - player.width - 10) {
         player.xPos += player.shift;
     } else if (moveLeft && player.xPos > 0) {
         player.xPos -= player.shift;
@@ -607,6 +610,7 @@ function generateRoad() {
     drawWhiteSideRoad();
     drawRedSideRoad();
     drawRoad();
+    drawMiddleLine();
 }
 
 function generateBackground() {
@@ -620,7 +624,9 @@ function drawWhiteSideRoad() {
     ctx.setLineDash([]);
     ctx.beginPath();
     roadLinePositions.forEach((roadPoint) => {
-        ctx.lineTo(roadPoint.xPos, roadPoint.yPos - shift);
+        if (shouldDraw(roadPoint.yPos - shift)) {
+            ctx.lineTo(roadPoint.xPos, roadPoint.yPos - shift);
+        }
     })
     ctx.stroke();
 }
@@ -632,8 +638,23 @@ function drawRedSideRoad() {
     ctx.setLineDash([25]);
     ctx.moveTo(leftRoadLineStart, canvas.clientHeight - shift);
     roadLinePositions.forEach((roadPoint) => {
+        if (shouldDraw(roadPoint.yPos - shift));
         ctx.lineTo(roadPoint.xPos, roadPoint.yPos - shift);
     })
+    ctx.stroke();
+}
+
+function drawMiddleLine() {
+    ctx.beginPath();
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 10;
+    ctx.setLineDash([25]);
+    ctx.moveTo(leftRoadLineStart, canvas.clientHeight - shift);
+    roadLinePositions.forEach((roadPoint) => {
+        if (roadLinePositions.indexOf(roadPoint) < roadLinePositions.length / 2 && shouldDraw(roadPoint.yPos - shift)) {
+            ctx.lineTo(roadPoint.xPos - 150, roadPoint.yPos - shift);
+        }
+    });
     ctx.stroke();
 }
 
@@ -642,7 +663,9 @@ function drawRoad() {
     ctx.beginPath();
     ctx.moveTo(leftRoadLineStart, canvas.clientHeight - shift);
     roadLinePositions.forEach((roadPoint) => {
-        ctx.lineTo(roadPoint.xPos, roadPoint.yPos - shift);
+        if (shouldDraw(roadPoint.yPos - shift)) {
+            ctx.lineTo(roadPoint.xPos, roadPoint.yPos - shift);
+        }
     });
     ctx.fill();
 }
@@ -657,7 +680,7 @@ function handleStep() {
 
 function drawCoins() {
     coinsPositions.forEach((coinPosition) => {
-        if (!coinPosition.collected) {
+        if (!coinPosition.collected && shouldDraw(coinPosition.yPos - shift)) {
             ctx.fillStyle = "yellow";
             ctx.strokeStyle = "orange";
             ctx.lineWidth = 3;
@@ -675,8 +698,16 @@ function drawCoins() {
 
 function drawScore() {
     ctx.font = "24px Arial";
-    ctx.fillStyle = "black";
-    ctx.fillText("Wynik: " + score, canvas.width - 150, canvas.height - 25);
+    if (score > bestScore && bestScore) {
+        ctx.fillStyle = "gold";
+    } else {
+        ctx.fillStyle = "black";
+    }
+    ctx.fillText("Wynik: " + score, canvas.width - 180, canvas.height - 25);
+    if (bestScore) {
+        ctx.fillStyle = "black";
+        ctx.fillText("Rekord: " + bestScore, canvas.width - 180, canvas.height - 50);
+    }
 }
 
 function checkCollection() {
@@ -707,10 +738,15 @@ function checkCollision() {
 }
 
 function resetGame() {
+    bestScore = bestScore < score ? score : bestScore;
     score = 0;
     shift = 0;
     player.xPos = canvas.clientWidth / 2 - 22;
     coinsPositions.forEach((coin) => {
         coin.collected = false;
     })
+}
+
+function shouldDraw(yCord) {
+    return yCord > -2000;
 }

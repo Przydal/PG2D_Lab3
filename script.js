@@ -294,26 +294,270 @@ let coinsPositions = [{
         xPos: 400,
         yPos: -8760
     },
+    {
+        xPos: 400,
+        yPos: -8790
+    },
+    {
+        xPos: 400,
+        yPos: -8820
+    },
+    {
+        xPos: 400,
+        yPos: -8850
+    },
+    {
+        xPos: 400,
+        yPos: -8880
+    }
+];
+
+let bombPositions = [{
+        xPos: 380,
+        yPos: -220
+    },
+    {
+        xPos: 300,
+        yPos: -500
+    },
+    {
+        xPos: 380,
+        yPos: -550
+    },
+    {
+        xPos: 480,
+        yPos: -750
+    },
+    {
+        xPos: 260,
+        yPos: -1000
+    },
+    {
+        xPos: 310,
+        yPos: -1000
+    },
+    {
+        xPos: 440,
+        yPos: -1000
+    }, {
+        xPos: 490,
+        yPos: -1000
+    },
+    {
+        xPos: 300,
+        yPos: -1300
+    },
+    {
+        xPos: 350,
+        yPos: -1300
+    },
+    {
+        xPos: 400,
+        yPos: -1300
+    },
+    {
+        xPos: 450,
+        yPos: -1300
+    },
+    {
+        xPos: 450,
+        yPos: -1650
+    },
+    {
+        xPos: 500,
+        yPos: -1650
+    },
+    {
+        xPos: 550,
+        yPos: -1650
+    },
+    {
+        xPos: 600,
+        yPos: -1650
+    },
+    {
+        xPos: 530,
+        yPos: -2000
+    },
+    {
+        xPos: 530,
+        yPos: -2050
+    },
+    {
+        xPos: 530,
+        yPos: -2200
+    },
+    {
+        xPos: 530,
+        yPos: -2500
+    },
+    {
+        xPos: 530,
+        yPos: -2550
+    },
+    {
+        xPos: 430,
+        yPos: -2900
+    },
+    {
+        xPos: 480,
+        yPos: -2900
+    },
+    {
+        xPos: 530,
+        yPos: -2900
+    },
+    {
+        xPos: 650,
+        yPos: -3000
+    },
+    {
+        xPos: 470,
+        yPos: -3400
+    },
+    {
+        xPos: 440,
+        yPos: -3550
+    },
+    {
+        xPos: 420,
+        yPos: -3700
+    },
+    {
+        xPos: 280,
+        yPos: -4200
+    },
+    {
+        xPos: 330,
+        yPos: -4200
+    },
+    {
+        xPos: 380,
+        yPos: -4200
+    },
+    {
+        xPos: 380,
+        yPos: -4400
+    },
+    {
+        xPos: 430,
+        yPos: -4400
+    },
+    {
+        xPos: 480,
+        yPos: -4400
+    },
+    {
+        xPos: 280,
+        yPos: -4750
+    },
+    {
+        xPos: 330,
+        yPos: -4750
+    },
+    {
+        xPos: 380,
+        yPos: -4750
+    },
+    {
+        xPos: 420,
+        yPos: -5100
+    },
+    {
+        xPos: 400,
+        yPos: -5150
+    },
+    {
+        xPos: 380,
+        yPos: -5200
+    },
+    {
+        xPos: 360,
+        yPos: -5250
+    },
+    {
+        xPos: 340,
+        yPos: -5300
+    },
+    {
+        xPos: 250,
+        yPos: -5400
+    },
+    {
+        xPos: 260,
+        yPos: -5750
+    },
+    {
+        xPos: 300,
+        yPos: -7000
+    },
+    {
+        xPos: 150,
+        yPos: -7000
+    },
+    {
+        xPos: 220,
+        yPos: -7150
+    },
+    {
+        xPos: 270,
+        yPos: -7150
+    },
+    {
+        xPos: 270,
+        yPos: -7350
+    },
+    {
+        xPos: 300,
+        yPos: -7450
+    },
+    {
+        xPos: 370,
+        yPos: -7800
+    },
+    {
+        xPos: 370,
+        yPos: -8000
+    },
+    {
+        xPos: 380,
+        yPos: -8400
+    },
+    {
+        xPos: 300,
+        yPos: -8550
+    },
+    {
+        xPos: 380,
+        yPos: -8650
+    }
 ];
 
 setInterval(generateInitialScreen, 1000 / (60 * 2.5));
+
 
 function generateInitialScreen() {
     generateBackground();
 
     generateRoad();
+    drawCoins();
+    generateBombs();
+    handleStep();
 
+}
+
+function generateBombs() {
+    var img = new Image();
+    img.src = 'bomb.png';
+    bombPositions.forEach((bombPosition) => {
+        ctx.drawImage(img, bombPosition.xPos, bombPosition.yPos - shift);
+    })
 }
 
 function generateRoad() {
     drawWhiteSideRoad();
     drawRedSideRoad();
     drawRoad();
-
-    drawCoins();
-
-    handleStep();
-
 }
 
 function generateBackground() {
@@ -355,10 +599,10 @@ function drawRoad() {
 }
 
 function handleStep() {
-    if (shift < -9500) {
+    if (shift < -9600) {
         shift = 0;
     } else {
-        shift -= 10;
+        shift -= 2;
     }
 }
 
